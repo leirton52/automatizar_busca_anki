@@ -34,11 +34,9 @@ do
   echo "$word - $ok" >> "pesquisadas"
 done
 
-: '
 #salving the file with the words not searched
 > para_pesquisar
 for word in ${rest_word[*]}
 do
   echo "$word" >> "para_pesquisar"
 done
-'
