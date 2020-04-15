@@ -1,0 +1,1 @@
+Abrindo em uma sessão de navegador existente.
