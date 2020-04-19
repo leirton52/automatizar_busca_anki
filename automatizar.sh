@@ -20,23 +20,24 @@ anki >& message_anki.txt &
     count=$(( count+1 ))
 done < "${1:-/dev/stdin}"
 
-#the searched words in the your file. 
+#the searched words in the your file.
+count=1
 echo >> pesquisadas
 echo "$(date +"%d/%m/%y")" >> pesquisadas
 echo >> pesquisadas
-
-for word in ${search_word[*]}
+for word in "${search_word[@]}"
 do
   google-chrome --new-window "https://www.google.com/search?tbm=isch&q=$word" "https://context.reverso.net/traducao/ingles-portugues/$word" >& message_google.txt
 
-  echo "a palavra --$word-- foi inserida no anki?"
+  echo "$count - a palavra --$word-- foi inserida no anki?"
   read ok;
   echo "$word - $ok" >> "pesquisadas"
+  count=$(( $count + 1 ))
 done
 
 #salving the file with the words not searched
 > para_pesquisar
-for word in ${rest_word[*]}
+for word in "${rest_word[@]}"
 do
   echo "$word" >> "para_pesquisar"
 done
