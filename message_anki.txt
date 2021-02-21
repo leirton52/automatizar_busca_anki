@@ -1,1 +1,1 @@
-This is an BETA build - please do not package it up for Linux distributions
+Already running; reusing existing instance.
