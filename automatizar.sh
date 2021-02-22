@@ -1,7 +1,23 @@
 #! /bin/bash
 
+#starting the timer
+timer_init=$(date +"%s")
+
 count=0
 number_of_word=2
+
+#searching if the wmctrl(windows manager control) is installed and installing it if not
+if [ $(which wmctrl) ]
+  then
+	echo "wctrl está instalado" > .log
+  else
+    echo "O wmctrl(gerenciador de controle de janelas) será instalado"
+    echo ""
+    sudo apt install wmctrl
+    echo ""
+    echo "wmctrl instalado com sucesso"
+    echo "wmctrl instalado com sucesso" > .log
+fi
 
 declare -a search_word
 declare -a rest_word
@@ -28,7 +44,7 @@ done < "para_pesquisar"
 
 #searching for words and inserting them in the your file.
 count=1 # This counter shows us which word are searching for(position)
-echo "\n$(date +"%d/%m/%y")\n" >> pesquisadas #search header of the day
+echo -e "\n$(date +"%d/%m/%y")\n" >> pesquisadas #search header of the day
 for word in "${search_word[@]}"
 do
   google-chrome --new-window "https://www.google.com/search?tbm=isch&q=$word" "https://context.reverso.net/traducao/ingles-portugues/$word" >& message_google.txt
@@ -47,6 +63,9 @@ do
   echo "$word - $ok" >> "pesquisadas" #stored the searched words in the control file
   count=$(( $count + 1 ))
   echo ""
+
+  #closing the window that was opened
+  wmctrl -c "$word"
 done
 
 #salving the file with the words not searched
@@ -55,3 +74,10 @@ for word in "${rest_word[@]}"
 do
   echo "$word" >> "para_pesquisar"
 done
+
+#ending the timer
+timer_end=$(date +"%s")
+
+time_min=$(echo "scale=2; ($timer_end - $timer_init)/60" | bc)
+echo -e "Foram gastos --$time_min minutos-- hoje" >> pesquisadas
+echo -e "Foram gastos --\e[1;31m$time_min minutos\e[1;33m-- hoje"
